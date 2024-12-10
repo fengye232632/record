@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljr.mapper.SysUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ljr.entity.SysUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, password, nickname, email, phone, status, create_time, update_time
+    </sql>
+    
+    <!-- 登录查询 -->
+    <select id="login" resultType="com.ljr.entity.SysUser">
+        SELECT * FROM sys_user 
+        WHERE username = #{username} 
+        AND password = #{password}
+        AND status = 0
+    </select>
+    
+    <!-- 根据用户名查询 -->
+    <select id="findByUsername" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List"/>
+        FROM sys_user
+        WHERE username = #{username}
+    </select>
+    
+    <!-- 新增用户 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_user
+        (username, password, nickname, email, phone, status)
+        VALUES
+        (#{username}, #{password}, #{nickname}, #{email}, #{phone}, #{status})
+    </insert>
+    
+    <!-- 更新用户 -->
+    <update id="update">
+        UPDATE sys_user
+        <set>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除用户 -->
+    <delete id="deleteById">
+        DELETE FROM sys_user WHERE id = #{id}
+    </delete>
+</mapper> 
